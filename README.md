@@ -6,4 +6,5 @@ O minimo para rodar seria 8gb de RAM, Ryzen 3/5, GPU Integrada e use SSD.
 
 E o recomendado é: 16gb de RAM, Ryzen 5/7 e use SSD.
 
-Para rodar precisa de instalar Python 3.12.10 (https://www.python.org/downloads/release/python-31210/), Ollama e Qwen3 1.7B (para instalar o Qwen3 tem que abrir cmd e colocar "pip install ollama" e espere e pronto.) e esse vai ser nosso projeto
+Para rodar precisa de instalar Python 3.12.10 (https://www.python.org/downloads/release/python-31210/), Ollama, Qwen3 1.7B e a blibioteca do Ollama( tem que abrir como administrador o cmd e colocar "pip install ollama" e pronto pode usar).
+
