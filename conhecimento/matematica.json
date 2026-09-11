@@ -1,0 +1,14 @@
+[
+    {
+        "pergunta": "o que é uma fração",
+        "resposta": "Fração representa uma parte de um todo. Ela possui numerador, que fica em cima, e denominador, que fica embaixo."
+    },
+    {
+        "pergunta": "o que é multiplicação",
+        "resposta": "Multiplicação é uma operação matemática que representa a soma repetida de uma quantidade."
+    },
+    {
+        "pergunta": "o que é divisão",
+        "resposta": "Divisão é a operação usada para repartir uma quantidade em partes iguais ou descobrir quantas vezes uma quantidade cabe em outra."
+    }
+]
