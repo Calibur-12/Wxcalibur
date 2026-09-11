@@ -1,31 +1,9 @@
 🤖 Wxcalibur
 
-Wxcalibur é uma IA brasileira, local e leve, criada em Python.
+Wxcalibur é feita para ser leve, e ser usada no dia a dia e a melhor opção para usar é brasileiro por eu ter preguiça de traduzir em inglês então se você querer o código vai ser tudo em português brasileiro, esse projeto esta em desenvolvimento e cada dia fica perto de lançar uma nova versão, e já é disponivel a IA (ainda não tenho nome para coloca-la) pesquisar pela internet então ela vai ser simples para ser leve e otimizada para computadores fracos e médios, a cada versão nova eu tento fazer melhor e mais otimizada para melhor desempenho.
 
-Ela usa Ollama + Qwen3 1.7B para conversar, aprender informações e usar uma pequena base de conhecimento.
+O minimo para rodar seria 8gb de RAM, Ryzen 3/5, GPU Integrada e use SSD.
 
-🚧 Em desenvolvimento: o projeto está sendo construído e receberá novas funções com o tempo.
+E o recomendado é: 16gb de RAM, Ryzen 5/7 e use SSD.
 
-🎯 Objetivo: ser simples, leve e boa o suficiente para o dia a dia.
-
-⚡ Recursos
-🇧🇷 Português
-🧠 Memória
-📚 Base de conhecimento
-💻 Execução local
-⚡ Modelo leve
-🐍 Python
-🛠️ Tecnologias
-
-Python + Ollama + Qwen3 1.7B + JSON
-
-🚀 Como usar
-pip install ollama
-ollama pull qwen3:1.7b
-python main.py
-🔮 Próximos passos
-
-Wxcalibur 0.4: busca inteligente, memória melhor e mais otimização.
-
-🇧🇷 Feita no Brasil. Leve por escolha.
-🚧 Projeto em desenvolvimento.
+Para rodar precisa de instalar Python 3.12.10 (https://www.python.org/downloads/release/python-31210/), Ollama e Qwen3 1.7B (para instalar o Qwen3 tem que abrir cmd e colocar "pip install ollama" e espere e pronto.) e esse vai ser nosso projeto
