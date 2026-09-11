@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import ollama
 
 
@@ -15,6 +16,9 @@ PASTA_CONHECIMENTO = os.path.join(
 
 MODELO = "qwen3:1.7b"
 
+MAX_RESULTADOS_CONHECIMENTO = 3
+MAX_RESULTADOS_MEMORIA = 2
+
 
 def carregar_memoria():
 
@@ -22,14 +26,17 @@ def carregar_memoria():
         return {}
 
     try:
+
         with open(
             ARQUIVO_MEMORIA,
             "r",
             encoding="utf-8"
         ) as arquivo:
+
             return json.load(arquivo)
 
     except:
+
         return {}
 
 
@@ -77,6 +84,7 @@ def carregar_conhecimento():
                 dados = json.load(f)
 
             if isinstance(dados, list):
+
                 conhecimento.extend(dados)
 
         except Exception as erro:
@@ -88,6 +96,114 @@ def carregar_conhecimento():
     return conhecimento
 
 
+def palavras(texto):
+
+    texto = texto.lower()
+
+    return set(
+        re.findall(
+            r"\b\w+\b",
+            texto
+        )
+    )
+
+
+def buscar_conhecimento(
+    pergunta,
+    conhecimento
+):
+
+    palavras_pergunta = palavras(
+        pergunta
+    )
+
+    resultados = []
+
+    for item in conhecimento:
+
+        texto = (
+            item.get("pergunta", "")
+            + " "
+            + item.get("resposta", "")
+        )
+
+        palavras_item = palavras(
+            texto
+        )
+
+        pontos = len(
+            palavras_pergunta
+            & palavras_item
+        )
+
+        if pontos > 0:
+
+            resultados.append(
+                (pontos, item)
+            )
+
+    resultados.sort(
+        key=lambda resultado: resultado[0],
+        reverse=True
+    )
+
+    return [
+        item
+        for pontos, item
+        in resultados[
+            :MAX_RESULTADOS_CONHECIMENTO
+        ]
+    ]
+
+
+def buscar_memoria(
+    pergunta,
+    memoria
+):
+
+    palavras_pergunta = palavras(
+        pergunta
+    )
+
+    resultados = []
+
+    for chave, valor in memoria.items():
+
+        texto = (
+            chave
+            + " "
+            + str(valor)
+        )
+
+        palavras_memoria = palavras(
+            texto
+        )
+
+        pontos = len(
+            palavras_pergunta
+            & palavras_memoria
+        )
+
+        if pontos > 0:
+
+            resultados.append(
+                (
+                    pontos,
+                    chave,
+                    valor
+                )
+            )
+
+    resultados.sort(
+        key=lambda resultado: resultado[0],
+        reverse=True
+    )
+
+    return resultados[
+        :MAX_RESULTADOS_MEMORIA
+    ]
+
+
 def conversar(
     mensagem,
     memoria,
@@ -95,24 +211,36 @@ def conversar(
     conhecimento
 ):
 
+    memorias_relevantes = buscar_memoria(
+        mensagem,
+        memoria
+    )
+
     memorias = ""
 
-    if memoria:
+    for pontos, chave, valor in memorias_relevantes:
 
-        for chave, valor in memoria.items():
+        memorias += (
+            f"- {chave}: {valor}\n"
+        )
 
-            memorias += (
-                f"- {chave}: {valor}\n"
-            )
+    if not memorias:
 
-    else:
+        memorias = (
+            "Nenhuma memória relevante."
+        )
 
-        memorias = "Nenhuma memória."
 
+    conhecimentos_relevantes = (
+        buscar_conhecimento(
+            mensagem,
+            conhecimento
+        )
+    )
 
     informacoes = ""
 
-    for item in conhecimento:
+    for item in conhecimentos_relevantes:
 
         pergunta = item.get(
             "pergunta",
@@ -129,6 +257,13 @@ def conversar(
             f"Resposta: {resposta}\n\n"
         )
 
+    if not informacoes:
+
+        informacoes = (
+            "Nenhuma informação "
+            "relevante encontrada."
+        )
+
 
     mensagens = [
 
@@ -136,26 +271,26 @@ def conversar(
             "role": "system",
 
             "content": f"""
-Você é a Wxcalibur 0.3.
+Você é a Wxcalibur 0.2.
 
 Você é uma inteligência artificial
-local criada em Python.
+local criada em Python no Brasil.
 
 Responda em português quando o usuário
 falar português.
 
-Seja amigável e explique as coisas
-de maneira simples.
+Seja amigável, direto e simples.
 
-Você possui uma base de conhecimento.
+Use as informações relevantes abaixo
+quando elas ajudarem na resposta.
 
-Use o conhecimento abaixo quando ele
-for útil para responder.
+Não invente informações presentes na
+memória ou na base de conhecimento.
 
-MEMÓRIAS:
+MEMÓRIAS RELEVANTES:
 {memorias}
 
-CONHECIMENTO:
+CONHECIMENTO RELEVANTE:
 {informacoes}
 """
         }
@@ -163,7 +298,9 @@ CONHECIMENTO:
     ]
 
 
-    mensagens.extend(historico)
+    mensagens.extend(
+        historico
+    )
 
 
     mensagens.append({
@@ -184,14 +321,22 @@ CONHECIMENTO:
     )
 
 
-    texto = resposta["message"]["content"]
+    texto = resposta[
+        "message"
+    ][
+        "content"
+    ]
 
 
-    # Remove negrito Markdown
-    texto = texto.replace("**", "")
+    texto = texto.replace(
+        "**",
+        ""
+    )
 
-    # Remove sublinhado Markdown
-    texto = texto.replace("__", "")
+    texto = texto.replace(
+        "__",
+        ""
+    )
 
 
     return texto
@@ -209,7 +354,9 @@ def aprender(
 
     memoria[chave] = valor
 
-    salvar_memoria(memoria)
+    salvar_memoria(
+        memoria
+    )
 
     return (
         f"Aprendi! 🧠 "
@@ -236,4 +383,3 @@ def lembrar(
         f"Não lembro de "
         f"'{chave}' ainda."
     )
-

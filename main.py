@@ -17,12 +17,10 @@ def main():
 
 
     print("=" * 60)
-    print("                 MINHA IA 0.3 🤖")
+    print("                 WXCALIBUR 0.2 🤖")
     print("=" * 60)
 
     print()
-
-    print("Modelo: Qwen3 1.7B")
 
     print(
         "Memórias carregadas:",
@@ -71,9 +69,11 @@ def main():
                 print(
                     "IA: Use assim:"
                 )
+
                 print(
                     "aprenda: nome = Maneiro"
                 )
+
                 print()
 
                 continue
